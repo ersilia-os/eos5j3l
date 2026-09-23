@@ -1,1 +1,11 @@
 name,type,direction,description
+smi_0,string,,Generated molecule index 0 matching the 3D shape and pharmacophore profile of the input compound
+smi_1,string,,Generated molecule index 1 matching the 3D shape and pharmacophore profile of the input compound
+smi_2,string,,Generated molecule index 2 matching the 3D shape and pharmacophore profile of the input compound
+smi_3,string,,Generated molecule index 3 matching the 3D shape and pharmacophore profile of the input compound
+smi_4,string,,Generated molecule index 4 matching the 3D shape and pharmacophore profile of the input compound
+smi_5,string,,Generated molecule index 5 matching the 3D shape and pharmacophore profile of the input compound
+smi_6,string,,Generated molecule index 6 matching the 3D shape and pharmacophore profile of the input compound
+smi_7,string,,Generated molecule index 7 matching the 3D shape and pharmacophore profile of the input compound
+smi_8,string,,Generated molecule index 8 matching the 3D shape and pharmacophore profile of the input compound
+smi_9,string,,Generated molecule index 9 matching the 3D shape and pharmacophore profile of the input compound

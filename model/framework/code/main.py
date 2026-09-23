@@ -1,37 +1,30 @@
 # imports
-import os
-import csv
 import sys
-import numpy as np
-from rdkit import Chem
-from rdkit.Chem.Descriptors import MolWt
+
 from ersilia_pack_utils.core import read_smiles, write_out
 
-# parse arguments
-input_file = sys.argv[1]
-output_file = sys.argv[2]
+from predict import N_OUTPUTS, generate
 
-# current file directory
-root = os.path.dirname(os.path.abspath(__file__))
 
-# my model
 def my_model(smiles_list):
-    return [MolWt(Chem.MolFromSmiles(smi)) for smi in smiles_list]
+    return [generate(smi) for smi in smiles_list]
 
 
-# read SMILES from .csv file, assuming one column with header
-_, smiles_list = read_smiles(input_file)
+if __name__ == "__main__":
+    # parse arguments
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
 
-# run model
-outputs = my_model(smiles_list)
+    # read SMILES from .csv file, assuming one column with header
+    _, smiles_list = read_smiles(input_file)
 
-#check input and output have the same lenght
-input_len = len(smiles_list)
-output_len = len(outputs)
-assert input_len == output_len
+    # run model
+    outputs = my_model(smiles_list)
 
-num_dims = outputs.shape[1]
-header = [f"feat_{str(i).zfill(3)}" for i in range(num_dims)]
+    # check input and output have the same length
+    assert len(smiles_list) == len(outputs)
 
-# write output in a .csv file
-write_out(outputs, header, output_file, np.float32)
+    header = [f"smi_{str(i).zfill(1)}" for i in range(N_OUTPUTS)]
+
+    # write output in a .csv file
+    write_out(outputs, header, output_file)
