@@ -2,13 +2,14 @@ Identifier: eos5j3l
 Slug: enscondflow-shape
 Status: In progress
 Title: Ensemble-Conditioned Molecular Design
-Description: Generates 10 molecules conditioned on the 3D shape and pharmacophore
-  profile of an input compound, using flow matching with ensemble-conditioned guidance
-  from AstraZeneca and Chalmers. Trained on 300K GEOM-Drugs molecules with CREST
-  conformer ensembles and 35K PDB-derived protein-ligand complexes. Drug-like inputs
-  yield structurally distinct compounds; small rigid molecules are instead often
-  reproduced, so guidance is weakened from the published defaults and the input
-  compound and duplicates are filtered from the returned set.
+Description: Generates 10 molecules conditioned on the 3D shape and 
+  pharmacophore profile of an input compound, using flow matching with 
+  ensemble-conditioned guidance from AstraZeneca and Chalmers. Trained on 300K 
+  GEOM-Drugs molecules with CREST conformer ensembles and 35K PDB-derived 
+  protein-ligand complexes. Drug-like inputs yield structurally distinct 
+  compounds; small rigid molecules are instead often reproduced, so guidance is 
+  weakened from the published defaults and the input compound and duplicates are
+  filtered from the returned set.
 Deployment:
   - Local
 Source: Local
@@ -22,8 +23,8 @@ Output:
   - Compound
 Output Dimension: 10
 Output Consistency: Fixed
-Interpretation: "10 generated molecules sharing the 3D shape and pharmacophore
-  profile of the input compound."
+Interpretation: 10 generated molecules sharing the 3D shape and pharmacophore 
+  profile of the input compound.
 Tag:
   - Compound generation
 Biomedical Area:
@@ -36,3 +37,4 @@ Publication: https://doi.org/10.48550/arXiv.2609.15077
 Source Code: https://github.com/rssrwn/ensemble-cond-design
 License: MIT
 Contributor: arnaucoma24
+Incorporation Date: '2026-09-22'
