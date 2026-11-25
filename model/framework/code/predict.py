@@ -25,6 +25,7 @@ from rdkit import Chem
 from rdkit.Chem import AllChem
 
 from enscondflow.repr import GraphMol
+from enscondflow.repr.vocab import AtomVocab
 from enscondflow.sample import load_pretrained, sample_molecules
 
 N_OUTPUTS = 10
@@ -54,36 +55,46 @@ def _reference(smiles):
     if mol is None:
         return None
     mol = Chem.AddHs(mol)
+    # Bond-free inputs such as [Na+].[Cl-] cannot be turned into a graph to condition on.
+    if mol.GetNumBonds() == 0:
+        return None
     if AllChem.EmbedMolecule(mol, randomSeed=SEED) != 0:
         return None
     AllChem.MMFFOptimizeMolecule(mol)
     return GraphMol.from_rdkit(mol)
 
 
+def _supported(reference):
+    """True if the model can condition on this reference.
+
+    The checkpoint was trained on molecules of at most ``max_size`` heavy atoms (48) and on a
+    fixed set of charged atom types (no As, Na, Sb and others). Anything else would raise inside
+    the sampler, so it is refused here, up front, with an empty row. Real errors (a missing
+    checkpoint, a broken environment) are not caught and still stop the run.
+    """
+    if reference.remove_hs().n_atoms > _get_model().hparams["max_size"]:
+        return False
+    return all(token in AtomVocab for token in reference.charged_symbols)
+
+
 def generate(smiles, n_outputs=N_OUTPUTS):
     """Return n_outputs generated SMILES for one input compound, padded with empty strings.
 
-    An input the model cannot condition on gives an empty row instead of stopping the
-    batch: more than the checkpoint's 48 heavy atoms (sample.py raises ValueError),
-    atom types outside the training vocabulary such as As, Na or Sb (KeyError in
-    vocab.py), or bond-free inputs such as [Na+].[Cl-] (RuntimeError in bonds.py).
+    Unusable inputs give an empty row: an unparsable SMILES, a molecule that cannot be embedded
+    in 3D, a bond-free input, more heavy atoms than the checkpoint allows, or an atom type
+    outside its vocabulary.
     """
-    try:
-        return _generate(smiles, n_outputs)
-    except Exception:
-        # Silent, like the unparsable-SMILES path: the test runner reads stderr output
-        # as an execution error.
-        return [""] * n_outputs
-
-
-def _generate(smiles, n_outputs):
     reference = _reference(smiles)
     if reference is None:
         return [""] * n_outputs
 
+    # Seed BEFORE the first model load: building the model draws from the global random
+    # generator, so the stored example outputs depend on seed -> load -> sample, in this order.
     # verbose=False keeps Lightning's "Seed set to ..." banner off stderr, which
     # Ersilia's runner otherwise reports as an execution error.
     L.seed_everything(SEED, workers=True, verbose=False)
+    if not _supported(reference):
+        return [""] * n_outputs
     n_sampled = n_outputs * OVERSAMPLE
     mols = sample_molecules(
         _get_model(),
