@@ -3,7 +3,7 @@
 Generates 10 molecules conditioned on the 3D shape and pharmacophore profile of an input compound, using flow matching with ensemble-conditioned guidance from AstraZeneca and Chalmers. Trained on 300K GEOM-Drugs molecules with CREST conformer ensembles and 35K PDB-derived protein-ligand complexes. Drug-like inputs yield structurally distinct compounds; small rigid molecules are instead often reproduced, so guidance is weakened from the published defaults and the input compound and duplicates are filtered from the returned set.
 
 This model was incorporated on 2026-09-22.
-Last packaged on 2026-09-23.
+Last packaged on 2026-11-25.
 
 ## Information
 ### Identifiers
@@ -52,10 +52,10 @@ Below are the **Output Columns** of the model:
 ### Resource Consumption
 - **Model Size (Mb):** `1101`
 - **Environment Size (Mb):** `1910`
-- **Image Size (Mb):** `4044.08`
+- **Image Size (Mb):** `1563.64`
 
 **Computational Performance (seconds):**
-- 10 inputs: `161.78`
+- 10 inputs: `130.46`
 - 100 inputs: `-1`
 - 10000 inputs: `-1`
 
